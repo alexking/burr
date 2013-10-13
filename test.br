@@ -1,0 +1,52 @@
+
+// Collection object 
+collection TestClass { 
+
+	// Define variables outside of the constructer 
+	var cat = "tonks";
+	var funk = "y";
+
+	// Easily define functions 
+	function test(weAreFunky) {
+		
+		if (weAreFunky) {
+
+			console.log("We are totally very funnky");
+
+		} else {
+
+			console.log("maybe not so funky");
+
+		}
+	}
+
+	function test2(num) {
+
+		var functions_can_have_variables_too = true;
+
+		console.log("Hi, I'm test " + num);
+		console.log("Our cat is " + this.cat);
+	}
+
+}
+
+// Normal javascript works normally
+justsomerandom = "code"; 
+
+function testTime() {
+	
+}
+
+// Make as many collections as you like
+collection AnotherFunkyCollection {
+
+
+}
+
+// Instantiate and use them
+var test = new TestClass(); 
+
+test.test2(1);
+
+test.test(true);
+test.test(false);
