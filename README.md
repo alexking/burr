@@ -5,8 +5,22 @@ Burr is a Javascript superset that embraces the prototype model while beautifyin
 
 #### Try it out 
 
-	./grind -f test.br
+Install using NPM - 
+
+	npm install burr -g 
 	
+Process .br files using - 
+
+	burr -f test.br
+	
+This will create test.js. 
+
+You can also watch a directory and process any non-js files using 
+
+	cd dir
+	burr -w
+
+
 #### Syntax 
 
 Check out the `test.br` file, more details coming soon. Keep in mind this is alpha alpha.
