@@ -1,36 +1,76 @@
 
 // Collection object 
+// You can mixin other collections as well using mixin 
 function TestClass() {
 
 	this.cat = "tonks";
-	this.funk = "y";
+	var t = this;
+	[Funky, Fresh].forEach(function(mixin) {
+		for (var func in mixin.prototype) {
+			TestClass.prototype[func] = mixin.prototype[func];
+		}
+		var mixinInstance = new mixin();
+		for (var prop in mixinInstance) {
+			t[prop] = mixinInstance[prop];
+		}
+	});
 
 }
 
-TestClass.prototype.test = function(weAreFunky) {
+TestClass.prototype.test = function() {
 
-		
-		if (weAreFunky) {
-
-			console.log("We are totally very funnky");
-
-		} else {
-
-			console.log("maybe not so funky");
-
-		}
 	
+	// You can use functions from mixins 
+	if (this.funk()) {
+
+		console.log("We are totally very funky");
+
+	} else {
+
+		console.log("maybe not so funky");
+
+	}
+
 };
 
 TestClass.prototype.test2 = function(num) {
 
 
-		var functions_can_have_variables_too = true;
+	var functions_can_have_variables_too = true;
 
-		console.log("Hi, I'm test " + num);
-		console.log("Our cat is " + this.cat);
-	
+	console.log("Hi, I'm test " + num);
+	console.log("Our cat is " + this.cat);
+	console.log("Is it fresh? " + (this.isFresh() ? "Yes" : "No") );
+
 };
+
+TestClass.prototype.isFresh = function() {
+
+	return test.freshness > 2;
+
+};
+
+
+
+// Collections to mix in
+function Funky() {
+
+
+}
+
+Funky.prototype.funk = function() {
+
+	return true; 
+
+};
+
+
+
+function Fresh() {
+
+	this.freshness = 5;
+
+}
 
 
 
@@ -41,18 +81,9 @@ function testTime() {
 	
 }
 
-// Make as many collections as you like
-function AnotherFunkyCollection() {
-
-
-}
-
-
-
-// Instantiate and use them
+// Instantiate and use!
 var test = new TestClass(); 
 
 test.test2(1);
+test.test();
 
-test.test(true);
-test.test(false);

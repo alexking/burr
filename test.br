@@ -1,17 +1,18 @@
 
 // Collection object 
-collection TestClass { 
+// You can mixin other collections as well using mixin 
+collection TestClass mixin Funky, Fresh { 
 
 	// Define variables outside of the constructer 
 	var cat = "tonks";
-	var funk = "y";
 
 	// Easily define functions 
-	function test(weAreFunky) {
+	function test() {
 		
-		if (weAreFunky) {
+		// You can use functions from mixins 
+		if (this.funk()) {
 
-			console.log("We are totally very funnky");
+			console.log("We are totally very funky");
 
 		} else {
 
@@ -26,7 +27,30 @@ collection TestClass {
 
 		console.log("Hi, I'm test " + num);
 		console.log("Our cat is " + this.cat);
+		console.log("Is it fresh? " + (this.isFresh() ? "Yes" : "No") );
 	}
+
+	// You can use variables from mixins 
+	function isFresh() {
+		return test.freshness > 2;
+	}
+
+
+
+}
+
+// Collections to mix in
+collection Funky {
+	
+	function funk() {
+		return true; 
+	}
+
+}
+
+collection Fresh {
+
+	var freshness = 5; 
 
 }
 
@@ -37,16 +61,9 @@ function testTime() {
 	
 }
 
-// Make as many collections as you like
-collection AnotherFunkyCollection {
-
-
-}
-
-// Instantiate and use them
+// Instantiate and use!
 var test = new TestClass(); 
 
 test.test2(1);
+test.test();
 
-test.test(true);
-test.test(false);

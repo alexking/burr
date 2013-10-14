@@ -84,6 +84,20 @@ String.prototype.indent = function( num )
 
 };
 
+String.prototype.unindent = function()
+{
+	var text = [];
+	var lines = this.split('\n');
+    for (var line_i in lines)
+	{
+		var line = lines[line_i];
+		text.push( line.replace(/^\t/, "") );
+    }
+
+    return text.join('\n');
+
+};
+
 String.prototype.lineNumber = function(  )
 {
 	var text = [];
@@ -215,6 +229,7 @@ function grind(source) {
 			end		  : endBracket, 
 			code	  : collectionCode,
 			name	  : collectionDefinition[1],
+			mixins    : ((typeof collectionDefinition[3] !== "undefined") ? collectionDefinition[3].split(mixinSeperatorRegex) : false) ,
 			functions : [],
 			variables : []
 		});
@@ -273,12 +288,32 @@ function grind(source) {
 			// Create the constructer 
 			output += "function " + collection.name + "() {\n\n";
 
+				// Add the variable 
 				for (var variableNumber in collection.variables) {
 					var variable = collection.variables[variableNumber]; 
 
 					output += "\tthis." + variable.code + ";\n";
 
 				}
+
+				// Add any mixins 
+				if (collection.mixins) {
+
+					output += "\tvar t = this;\n";
+					
+					output += "\t[" + collection.mixins.join(", ")  + "].forEach(function(mixin) {\n";
+					output += "\t\tfor (var func in mixin.prototype) {\n";
+					output += "\t\t\t" + collection.name + ".prototype[func] = mixin.prototype[func];\n";
+					output += "\t\t}\n";
+
+					output += "\t\tvar mixinInstance = new mixin();\n";
+					output += "\t\tfor (var prop in mixinInstance) {\n";
+					output += "\t\t\tt[prop] = mixinInstance[prop];\n";
+					output += "\t\t}\n";
+					output += "\t});\n";
+
+				}
+
 
 			output += "\n}\n\n";
 			
@@ -289,7 +324,7 @@ function grind(source) {
 
 				output += collection.name + ".prototype." + func.name + " = function(" + func.args + ") {\n";
 
-				output += func.code.trim().substring(1, func.code.trim().length - 1);
+				output += func.code.trim().substring(1, func.code.trim().length - 1).unindent();
 
 				output += "\n};\n\n";
 
