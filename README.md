@@ -20,10 +20,45 @@ You can also watch a directory and process any non-js files using
 	cd dir
 	burr -w
 
-
 #### Syntax 
 
-Check out the `test.br` file, more details coming soon. Keep in mind this is alpha alpha.
+Burr is based around using collections to organize objects using a nicer syntax. 
+
+	collection Apple {
+	
+		var chomps = 0;
+	
+		function chomp() {
+			this.chomps++;
+		}
+	
+	}
+
+	var apple = new Apple();
+	apple.chomp();
+	apple.chomp();
+	console.log("%s chomps", apple.chomps);
+
+This would compile into this Javascript object - 
+
+	function Apple() {
+		this.chomps = 0;
+	}
+	
+	Apple.prototype.chomp = function() {
+		this.chomps++;
+	};
+	
+	var apple = new Apple();
+	apple.chomp();
+	apple.chomp();
+	console.log("%s chomps", apple.chomps);
+
+Which of course outputs `2 chomps`. 
+
+Burr also supports mixins in function definitions. 
+
+Check out the `test.br` file. Keep in mind this is alpha alpha.
 
 #### Thanks
 Inspired by object and class pattern ideas from http://book.mixu.net/node/ch6.html.
