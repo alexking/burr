@@ -3,8 +3,13 @@
 // You can mixin other collections as well using mixin 
 collection TestClass mixin Funky, Fresh { 
 
-	// Define variables outside of the constructer 
+	// Define variables outside of the constructor 
 	var cat = "tonks";
+
+	// Optionally define a constructor (same name as collection)
+	function TestClass (a) {
+		console.log(a);
+	}
 
 	// Easily define functions 
 	function test() {

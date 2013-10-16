@@ -1,7 +1,7 @@
 
 // Collection object 
 // You can mixin other collections as well using mixin 
-function TestClass() {
+function TestClass(a) {
 
 	this.cat = "tonks";
 	var t = this;
@@ -14,6 +14,9 @@ function TestClass() {
 			t[prop] = mixinInstance[prop];
 		}
 	});
+
+	// Construct
+	console.log(a);
 
 }
 
@@ -82,7 +85,7 @@ function testTime() {
 }
 
 // Instantiate and use!
-var test = new TestClass(); 
+var test = new TestClass("Hello World"); 
 
 test.test2(1);
 test.test();

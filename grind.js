@@ -7,7 +7,7 @@ var chokidar = require('chokidar');
 
 
 program
-  .version('0.0.1')
+  .version('0.0.2')
   .option('-f, --file <path>', 'Input file')
   .option('-w, --watch [dir]', 'Watch')
   .parse(process.argv);
@@ -285,8 +285,37 @@ function grind(source) {
 
 		} else if (collection.type == "collection") {
 
+			var function_code = "";
+			var constructor_function = null;
+
+			// Functions
+			for (var functionNumber in collection.functions) {
+				var func = collection.functions[functionNumber];
+
+				// Constructor 
+				if (collection.name == func.name) {
+
+					constructor_function = func; 
+
+				} else {
+
+					// Normal function
+					function_code += collection.name + ".prototype." + func.name + " = function(" + func.args + ") {\n";
+
+					function_code += func.code.trim().substring(1, func.code.trim().length - 1).unindent();
+
+					function_code += "\n};\n\n";
+
+				}
+
+			}
+
 			// Create the constructer 
-			output += "function " + collection.name + "() {\n\n";
+			if (constructor_function) {
+				output += "function " + collection.name + "(" + constructor_function.args + ") {\n\n";
+			} else {
+				output += "function " + collection.name + "() {\n\n";
+			}
 
 				// Add the variable 
 				for (var variableNumber in collection.variables) {
@@ -314,23 +343,18 @@ function grind(source) {
 
 				}
 
+				// Add the real constructor if it exists 
+				if (constructor_function) {
+
+					output += "\n\t// Construct";
+					output += constructor_function.code.trim().substring(1, constructor_function.code.trim().length - 1).unindent();
+				}
+
 
 			output += "\n}\n\n";
 			
-			// Functions
-			for (var functionNumber in collection.functions) {
-				var func = collection.functions[functionNumber];
-
-
-				output += collection.name + ".prototype." + func.name + " = function(" + func.args + ") {\n";
-
-				output += func.code.trim().substring(1, func.code.trim().length - 1).unindent();
-
-				output += "\n};\n\n";
-
-
-
-			}
+			output += function_code;
+		
 
 		}
 
