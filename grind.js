@@ -185,7 +185,10 @@ function grind(source) {
 	for (var bracketPairNumber in bracketPairs) {
 		var bracketPair = bracketPairs[bracketPairNumber];
 
-		bracketMap[ bracketPair.start ] = bracketPair.done; 
+		bracketMap[ bracketPair.start ] = { 
+			end : bracketPair.done,
+			level : bracketPair.level
+		};
 
 	}
 
@@ -206,7 +209,7 @@ function grind(source) {
 		// Brackets 
 		var collectionStart = collectionDefinition.index;
 		var startBracket    = ((collectionDefinition[0].length - 1) + collectionStart);
-		var endBracket      = bracketMap[startBracket];
+		var endBracket      = bracketMap[startBracket].end;
 		var collectionCode  = source.substring(startBracket, endBracket);
 			
 		var collectionCodeWithoutFunctions = collectionCode; 
@@ -237,16 +240,22 @@ function grind(source) {
 		// Look for collection functions 
 		while (functionDefinition = functionRegex.exec(collectionCode)) {
 			var functionStartBracket	= ((functionDefinition[0].length - 1) + functionDefinition.index);
-			var functionEndBracket		= bracketMap[startBracket + functionStartBracket] - startBracket;
+			var functionBracketInfo     = bracketMap[startBracket + functionStartBracket];
+			var functionEndBracket		= functionBracketInfo.end - startBracket;
 			var functionCode			= collectionCode.substring(functionStartBracket, functionEndBracket);
 
-			collections[(collections.length - 1)].functions.push({
-				start	: functionStartBracket,
-				end		: functionEndBracket,
-				name	: functionDefinition[1],
-				args	: functionDefinition[2],
-				code	: functionCode
-			});
+			// We're only interesting in level 2 functions
+			if (functionBracketInfo.level == 2) { 
+
+				collections[(collections.length - 1)].functions.push({
+					start	: functionStartBracket,
+					end		: functionEndBracket,
+					name	: functionDefinition[1],
+					args	: functionDefinition[2],
+					code	: functionCode
+				});
+
+			}
 
 
 			collectionCodeWithoutFunctions = collectionCodeWithoutFunctions.replace(functionCode, "");
@@ -272,7 +281,6 @@ function grind(source) {
 		type	  : "text", 
 		code	  : lastCode
 	}); 
-
 
 	// Proccess into javascript
 	for (var collectionNumber in collections) {

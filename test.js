@@ -53,6 +53,29 @@ TestClass.prototype.isFresh = function() {
 
 };
 
+TestClass.prototype.yesYouCan = function() {
+
+
+	// To a variable 
+	var weHope = function() {
+		console.log("Hi!");
+	};
+
+	// As a callback 
+	normal(function () {
+		
+	});
+
+	// Named
+	var test = function TestThisCase() {
+
+	};
+
+	weHope();
+
+
+};
+
 
 
 // Collections to mix in
@@ -85,7 +108,7 @@ function testTime() {
 }
 
 // Instantiate and use!
-var test = new TestClass("Hello World"); 
+var test = new TestClass("Hello world!"); 
 
 test.test2(1);
 test.test();

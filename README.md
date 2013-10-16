@@ -60,6 +60,11 @@ Burr also supports mixins in function definitions.
 
 Check out the `test.br` file. Keep in mind this is alpha alpha.
 
+#### Latest Changelog
+**0.0.3** - Fixing a bug where annonymous functions would screw things up. 
+
+Read CHANGELOG.md for more.
+
 #### Thanks
 Inspired by object and class pattern ideas from http://book.mixu.net/node/ch6.html.
 

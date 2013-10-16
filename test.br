@@ -40,6 +40,27 @@ collection TestClass mixin Funky, Fresh {
 		return test.freshness > 2;
 	}
 
+	// You can use annonymous functions
+	function yesYouCan() {
+
+		// To a variable 
+		var weHope = function() {
+			console.log("Hi!");
+		};
+
+		// As a callback 
+		normal(function () {
+			
+		});
+
+		// Named
+		var test = function TestThisCase() {
+
+		};
+
+		weHope();
+
+	}
 
 
 }
@@ -67,7 +88,7 @@ function testTime() {
 }
 
 // Instantiate and use!
-var test = new TestClass(); 
+var test = new TestClass("Hello world!"); 
 
 test.test2(1);
 test.test();
