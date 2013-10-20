@@ -1,0 +1,87 @@
+
+collection Strings {
+	
+	function stringThatLooksLikeAnonymousFunc() {	
+		var test = "function () {";
+	}
+
+	function stringThatLooksLikeAFunc(frank) {	
+		var test = "function test() {";
+	}
+
+	function stringThatLooksLikeACollection() {
+
+		var test = "collection NotReal { ";
+
+	}
+
+	// This is a comment that looks like a function test() {
+	function regexThatLooksLikeAFunc() {
+
+		var test = /function test() {/g;
+	}
+
+	function singleQuotes() {
+
+		var t = '"';
+
+	}
+
+	function doubleQuotes() {
+
+		var t = "'";
+
+	}
+
+	function slashInSingleQuotes () {
+
+		var t = '/';
+
+	}
+
+
+	function slashInDoubleQuotes () {
+
+		var t = "/";
+
+	}
+
+	function slashInComment() {
+		// /
+	}
+
+	function blockComment() {
+		/*  */
+	}
+
+	function slashInBlockComment() {
+		/* / */
+	}
+
+	function singleQuoteInComment() {
+		// '
+	}
+
+	function singleQuoteInBlockComment() {
+		/* ' */
+	}
+
+	function doubleQuoteInComment() {
+		// "
+	}
+
+	function doubleQuoteInBlockComment() {
+		/* " */
+	}
+
+	function hu() {
+		var output = "// Construct";
+	}
+
+}
+
+function stringThatLooksLikeACollectionOutside() {
+
+	var test = "collection NotReal { ";
+
+}

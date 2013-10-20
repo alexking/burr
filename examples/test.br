@@ -93,3 +93,13 @@ var test = new TestClass("Hello world!");
 test.test2(1);
 test.test();
 
+
+static collection Some {
+	
+	var variablesAreCool = true; 
+
+	function stuff() {
+		console.log(this.variablesAreCool);
+	}
+}
+

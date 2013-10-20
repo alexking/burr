@@ -1,6 +1,6 @@
 {
   "name" : "burr",
-  "version" : "0.0.3",
+  "version" : "0.0.4",
   "author" : "Alex King", 
   "description" : "Burr is a Javascript superset that embraces the prototype model while beautifying the syntax (and compiles to plain JS)",
   "repository" : {
@@ -10,11 +10,12 @@
   "keywords" : [ "cli" ],
   "dependencies" : {
   	"commander" : "*",
-  	"chokidar" : "*"
+  	"chokidar" : "*",
+    "colors" : "*"
   },
-  "main": "./grind.js",
+  "main": "./src/js/grind.js",
   "preferGlobal" : true,
-  "bin": "./grind.js",
+  "bin": "./src/js/grind.js",
   "license" : "MIT",
   "engines" : {
   	"node" : "0.10.18"

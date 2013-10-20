@@ -1,50 +1,14 @@
-#!/usr/bin/env node
+function Burr() {
 
-
-var program = require('commander');
-var fs = require('fs');
-var chokidar = require('chokidar');
-
-
-program
-  .version('0.0.2')
-  .option('-f, --file <path>', 'Input file')
-  .option('-w, --watch [dir]', 'Watch')
-  .parse(process.argv);
-
-if (program.file) {
-
-	var output = program.file.replace('.br', '.js');
-	var input  = program.file;
-	
-	proccessFile(input, output);
-	
-	console.log("Writing %s to %s", input, output);
-
-} 
-
-if (program.watch) {
-
-	console.log("Watchin' .");
-		
-	var watcher = chokidar.watch('./', {persistent: true, ignored: /\.js$/ });
-
-	watcher
-	  .on('change', function(path) {
-
-
-		var output = path.replace('.br', '.js');
-		var input  = path;
-
-		console.log('Grinding ', input, ' to ', output);
-		proccessFile(input, output);
-
-	  });
 
 }
 
-function proccessFile(input, output) {
-	
+Burr.prototype.grindFile = function(input, output) {
+
+
+	var self = this; 
+	var fs = require('fs'); 
+
 	fs.readFile(input, function(err, data) {
 
 		if (err) {
@@ -54,77 +18,28 @@ function proccessFile(input, output) {
 		} else {
 
 			var source = data.toString();
-			var javascript = grind(source);
+			var javascript = self.grindString(source);
 
 			fs.writeFile(output, javascript);
 		}
 
 	});
 
-}
 
-// Add some stuff to String. I know, we're evil. 
-String.prototype.repeat = function( num )
-{
-    return new Array( num + 1 ).join( this );
-};
-
-
-String.prototype.indent = function( num )
-{
-	var text = [];
-	var lines = this.split('\n');
-    for (var line_i in lines)
-	{
-		var line = lines[line_i];
-		text.push("\t".repeat(num) + line );
-    }
-
-    return text.join('\n');
 
 };
 
-String.prototype.unindent = function()
-{
-	var text = [];
-	var lines = this.split('\n');
-    for (var line_i in lines)
-	{
-		var line = lines[line_i];
-		text.push( line.replace(/^\t/, "") );
-    }
+Burr.prototype.grindString = function(source) {
 
-    return text.join('\n');
-
-};
-
-String.prototype.lineNumber = function(  )
-{
-	var text = [];
-	var lines = this.split('\n');
-    for (var line_i in lines)
-	{
-		var line = lines[line_i];
-		text.push("   " + line_i + ": " + line );
-    }
-
-    return text.join('\n');
-
-};
-
-function grind(source) {
-
-	// 1. Look for brackets that aren't part of strings 
-	// 2. Find their partner
-	// 3. Keep a list of bracket + partner locations
-
-	// 4. Find the bracket definitions that we're interested in, down from collection > function | variable 
-	// 5. Create an array of plain, collection, collection function, and collection variable 
-	// 6. Reconstitute with a join 
 
 	var brackets = {}; 
 
-	var quotes = false; 
+	var quotes = false;
+	var singleQuotes = false; 
+	var regex = false;  
+	var comment = false; 
+	var blockComment = false; 
+
 	var bracketSet = 0; 
 	var bracketLevel = 0; 
 
@@ -137,17 +52,66 @@ function grind(source) {
 	for (var characterNumber = 0; characterNumber < source.length; characterNumber++) {
 		var character = source[characterNumber];
 		var previousCharacter = source[characterNumber - 1];
+		var nextCharacter = source[characterNumber + 1];
 
-		// Keep track of whether we are inside quotes
-		if (character == '"' && previousCharacter != '\\') {
-			quotes = !quotes;
-			continue; 
+		// Don't look for comments inside strings 
+		if (!quotes && !singleQuotes) {
+
+			// Comment Start 
+			if (character == '/' && previousCharacter == '/') {
+				comment = true; 
+				continue; 
+			}
+
+			// Comment End
+			if (character == "\n") {
+				comment = false; 
+				continue; 
+			}
+
+			// Block comment start 
+			if (previousCharacter == "/" && character == "*" ) {
+				blockComment = true; 
+				continue; 
+			}
+
+			if (character == "*" && nextCharacter == "/") {
+				blockComment = false; 
+				continue; 
+			}
+
 		}
 
-		// @TODO regex, comment, etc. 
+		// Don't look for anything inside comments 
+		if (!comment && !blockComment) {
+
+			// Keep track of whether we are inside quotes
+			if (character == '"' && previousCharacter != '\\' && !singleQuotes) {
+				quotes = !quotes;
+				continue; 
+			}
+
+			if (character == "'" && previousCharacter != "\\" && !quotes) {
+				singleQuotes = !singleQuotes;
+				continue; 
+			}
+
+
+			// Don't look for anything else inside quotes 
+			if (!quotes && !singleQuotes) {
+
+				// Regex 
+				if (character == '/' && previousCharacter != '/' && nextCharacter != '/') {
+					regex = !regex;
+					continue;
+				}
+
+			}
+
+		}
 
 		// If we aren't in quotes, we might be able to see a bracket 
-		if (!quotes) {
+		if (!quotes && !regex && !comment && !blockComment) {
 
 			if (character == "{" || character == "}") {
 				var reference;
@@ -193,7 +157,7 @@ function grind(source) {
 	}
 
 	// Regexes 
-	var collectionRegex = /collection\s+(.*?)(\s+mixin\s+(.*?)|)\s+{/g;
+	var collectionRegex = /(?:collection|class)\s+(.*?)(\s+mixin\s+(.*?)|)\s+{/g;
 	var functionRegex = /function\s+(.*?)\s*\((.*?)\)\s+{/g;
 	var variableRegex = /var\s*(.*?);/g;
 	var mixinSeperatorRegex = /,\s*/;  
@@ -209,6 +173,13 @@ function grind(source) {
 		// Brackets 
 		var collectionStart = collectionDefinition.index;
 		var startBracket    = ((collectionDefinition[0].length - 1) + collectionStart);
+		var collectionBracketInfo = bracketMap[startBracket]; 
+
+		// If we are unable to find a bracket, then we are in quotes 
+		if (typeof collectionBracketInfo === "undefined") {
+			continue; 
+		}
+
 		var endBracket      = bracketMap[startBracket].end;
 		var collectionCode  = source.substring(startBracket, endBracket);
 			
@@ -241,25 +212,30 @@ function grind(source) {
 		while (functionDefinition = functionRegex.exec(collectionCode)) {
 			var functionStartBracket	= ((functionDefinition[0].length - 1) + functionDefinition.index);
 			var functionBracketInfo     = bracketMap[startBracket + functionStartBracket];
-			var functionEndBracket		= functionBracketInfo.end - startBracket;
-			var functionCode			= collectionCode.substring(functionStartBracket, functionEndBracket);
 
-			// We're only interesting in level 2 functions
-			if (functionBracketInfo.level == 2) { 
+			// If we were unable to find bracket information, then this bracket was enclosed in quotes 
+			if (typeof functionBracketInfo !== "undefined") {
 
-				collections[(collections.length - 1)].functions.push({
-					start	: functionStartBracket,
-					end		: functionEndBracket,
-					name	: functionDefinition[1],
-					args	: functionDefinition[2],
-					code	: functionCode
-				});
+				var functionEndBracket		= functionBracketInfo.end - startBracket;
+				var functionCode			= collectionCode.substring(functionStartBracket, functionEndBracket);
+
+				// We're only interesting in level 2 functions
+				if (functionBracketInfo.level == 2) { 
+
+					collections[(collections.length - 1)].functions.push({
+						start	: functionStartBracket,
+						end		: functionEndBracket,
+						name	: functionDefinition[1],
+						args	: functionDefinition[2],
+						code	: functionCode
+					});
+
+				}
+
+
+				collectionCodeWithoutFunctions = collectionCodeWithoutFunctions.replace(functionCode, "");
 
 			}
-
-
-			collectionCodeWithoutFunctions = collectionCodeWithoutFunctions.replace(functionCode, "");
-
 
 		}
 
@@ -371,4 +347,58 @@ function grind(source) {
 
 	return output;
 
-}
+
+};
+
+
+
+module.exports = new Burr();
+
+// Add some stuff to String. I know, we're evil. 
+String.prototype.repeat = function( num )
+{
+    return new Array( num + 1 ).join( this );
+};
+
+
+String.prototype.indent = function( num )
+{
+	var text = [];
+	var lines = this.split('\n');
+    for (var line_i in lines)
+	{
+		var line = lines[line_i];
+		text.push("\t".repeat(num) + line );
+    }
+
+    return text.join('\n');
+
+};
+
+String.prototype.unindent = function()
+{
+	var text = [];
+	var lines = this.split('\n');
+    for (var line_i in lines)
+	{
+		var line = lines[line_i];
+		text.push( line.replace(/^\t/, "") );
+    }
+
+    return text.join('\n');
+
+};
+
+String.prototype.lineNumber = function(  )
+{
+	var text = [];
+	var lines = this.split('\n');
+    for (var line_i in lines)
+	{
+		var line = lines[line_i];
+		text.push("   " + line_i + ": " + line );
+    }
+
+    return text.join('\n');
+
+};

@@ -56,12 +56,17 @@ This would compile into this Javascript object -
 
 Which of course outputs `2 chomps`. 
 
-Burr also supports mixins in function definitions. 
-
-Check out the `test.br` file. Keep in mind this is alpha alpha.
+Check out the `examples/test.br` file. Keep in mind this is alpha alpha.
 
 #### Latest Changelog
-**0.0.3** - Fixing a bug where annonymous functions would screw things up. 
+### version 0.0.4
+Converting to Burr, now located in `/src/burr/`, exports into `/src/js/`, run `js/grind.js -w burr -d js ` for development. 
+
+Fixing a bunch of bugs, examples in `test/string.br`. 
+
+Adding Sublime Text 3 syntax and build files (`/syntax/`). 
+
+Adding `-d` option to export to directory, allowing directory or file with `-w`.
 
 Read CHANGELOG.md for more.
 

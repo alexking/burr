@@ -1,0 +1,21 @@
+
+collection Fruit {
+	
+	var chomps = 0;
+
+	function chomp() {
+		this.chomps++;
+	}
+
+}
+
+collection Apple {
+	
+	var numberOfChomps = 5; 
+	
+}
+
+var apple = new Apple();
+apple.chomp();
+apple.chomp();
+console.log("%s chomps", apple.chomps);

@@ -1,0 +1,37 @@
+class BurrFile {
+
+	var name; 
+	var directory;
+	var ext; 
+
+	function BurrFile(fileString) {
+		this.setFile(fileString);
+	}
+
+	function setFile(fileString) {
+		var path = require('path');
+
+		this.ext       = path.extname(fileString);
+		this.file      = path.basename(fileString, this.ext); 
+		this.directory = path.dirname(fileString);
+
+	}
+
+	function setDirectory(directory) {
+		this.directory = directory; 
+	}
+
+	function isBurrFile() {
+		return (this.ext == ".burr" || this.ext == ".br"); 
+	}
+
+	function javascript() {
+
+		// Replace 
+		return this.directory + "/" + this.file + ".js";
+
+	}
+
+}
+
+module.exports = BurrFile; 
