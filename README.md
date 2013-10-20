@@ -22,9 +22,9 @@ You can also watch a directory and process any non-js files using
 
 #### Syntax 
 
-Burr is based around using collections to organize objects using a nicer syntax. 
+Burr allows you to use Javascript's prototype/new pattern with a nicer syntax. 
 
-	collection Apple {
+	class Apple {
 	
 		var chomps = 0;
 	
@@ -55,6 +55,8 @@ This would compile into this Javascript object -
 	console.log("%s chomps", apple.chomps);
 
 Which of course outputs `2 chomps`. 
+
+Note that `class` was `collection` as of `0.0.3` - while `class` isn't completely accurate either, it better suggests that you are creating an object that may be instantiated using `new`. `collection` is still supported for now. 
 
 Check out the `examples/test.br` file. Keep in mind this is alpha alpha.
 
