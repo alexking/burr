@@ -1,5 +1,5 @@
 
-collection Fruit {
+class Fruit {
 	
 	var chomps = 0;
 
@@ -9,9 +9,7 @@ collection Fruit {
 
 }
 
-collection Apple {
-	
-	var numberOfChomps = 5; 
+class Apple mixin Fruit {
 	
 }
 
