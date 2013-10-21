@@ -1,4 +1,3 @@
-
 function Strings() {
 
 
@@ -108,6 +107,26 @@ Strings.prototype.doubleQuoteInBlockComment = function() {
 Strings.prototype.hu = function() {
 
 	var output = "// Construct";
+
+};
+
+Strings.prototype.wonkyRegex = function() {
+
+	var pathInfo = path.match(/a\/g/);
+
+};
+
+Strings.prototype.other = function() {
+
+	var test = '\\';
+
+};
+
+Strings.prototype.bracketInsideStringInsideLoop = function() {
+
+
+	var output = '\n';
+	
 
 };
 

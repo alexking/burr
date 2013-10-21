@@ -1,4 +1,3 @@
-
 collection Strings {
 	
 	function stringThatLooksLikeAnonymousFunc() {	
@@ -74,9 +73,28 @@ collection Strings {
 		/* " */
 	}
 
+
 	function hu() {
 		var output = "// Construct";
 	}
+
+	function wonkyRegex() {
+		var pathInfo = path.match(/a\/g/);
+	}
+
+
+	function other() {
+		var test = '\\';
+	}
+
+
+	function bracketInsideStringInsideLoop() {
+
+		var output = '\n';
+		
+	}
+
+
 
 }
 

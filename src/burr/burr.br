@@ -47,6 +47,7 @@ class Burr {
 			var character = source[characterNumber];
 			var previousCharacter = source[characterNumber - 1];
 			var nextCharacter = source[characterNumber + 1];
+			var ternaryCharacter = source[characterNumber - 2];
 
 			// Don't look for comments inside strings 
 			if (!quotes && !singleQuotes) {
@@ -80,12 +81,12 @@ class Burr {
 			if (!comment && !blockComment) {
 
 				// Keep track of whether we are inside quotes
-				if (character == '"' && previousCharacter != '\\' && !singleQuotes) {
+				if (character == '"' && (previousCharacter != '\\' || ternaryCharacter == '\\') && !singleQuotes) {
 					quotes = !quotes;
 					continue; 
 				}
 
-				if (character == "'" && previousCharacter != "\\" && !quotes) {
+				if (character == "'" && (previousCharacter != '\\' || ternaryCharacter == '\\') && !quotes) {
 					singleQuotes = !singleQuotes;
 					continue; 
 				}
@@ -95,7 +96,7 @@ class Burr {
 				if (!quotes && !singleQuotes) {
 
 					// Regex 
-					if (character == '/' && previousCharacter != '/' && nextCharacter != '/') {
+					if (character == '/' && previousCharacter != '/' && previousCharacter != '\\' && nextCharacter != '/') {
 						regex = !regex;
 						continue;
 					}
@@ -104,8 +105,11 @@ class Burr {
 
 			}
 
+
+			console.log("Q: %s Qs: %s C: %s Cb: %s R: %s", quotes, singleQuotes, comment, blockComment, regex, character);
+
 			// If we aren't in quotes, we might be able to see a bracket 
-			if (!quotes && !regex && !comment && !blockComment) {
+			if (!quotes && !singleQuotes && !regex && !comment && !blockComment) {
 
 				if (character == "{" || character == "}") {
 					var reference;

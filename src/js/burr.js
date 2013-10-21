@@ -51,8 +51,9 @@ Burr.prototype.grindString = function(source) {
 	// Loop through each character looking for something interesting 
 	for (var characterNumber = 0; characterNumber < source.length; characterNumber++) {
 		var character = source[characterNumber];
+		var ternaryCharacter  = source[characterNumber - 2];
 		var previousCharacter = source[characterNumber - 1];
-		var nextCharacter = source[characterNumber + 1];
+		var nextCharacter     = source[characterNumber + 1];
 
 		// Don't look for comments inside strings 
 		if (!quotes && !singleQuotes) {
@@ -86,12 +87,12 @@ Burr.prototype.grindString = function(source) {
 		if (!comment && !blockComment) {
 
 			// Keep track of whether we are inside quotes
-			if (character == '"' && previousCharacter != '\\' && !singleQuotes) {
+			if (character == '"' && (previousCharacter != '\\' || ternaryCharacter == '\\') && !singleQuotes) {
 				quotes = !quotes;
 				continue; 
 			}
 
-			if (character == "'" && previousCharacter != "\\" && !quotes) {
+			if (character == "'" && (previousCharacter != '\\' || ternaryCharacter == '\\') && !quotes) {
 				singleQuotes = !singleQuotes;
 				continue; 
 			}
@@ -101,7 +102,7 @@ Burr.prototype.grindString = function(source) {
 			if (!quotes && !singleQuotes) {
 
 				// Regex 
-				if (character == '/' && previousCharacter != '/' && nextCharacter != '/') {
+				if (character == '/' && previousCharacter != '/' && previousCharacter != '\\' && nextCharacter != '/') {
 					regex = !regex;
 					continue;
 				}
@@ -110,8 +111,10 @@ Burr.prototype.grindString = function(source) {
 
 		}
 
+		console.log("Q: %s Qs: %s C: %s Cb: %s R: %s : %s", quotes, singleQuotes, comment, blockComment, regex, character);
+
 		// If we aren't in quotes, we might be able to see a bracket 
-		if (!quotes && !regex && !comment && !blockComment) {
+		if (!quotes && !singleQuotes && !regex && !comment && !blockComment) {
 
 			if (character == "{" || character == "}") {
 				var reference;
@@ -131,7 +134,7 @@ Burr.prototype.grindString = function(source) {
 				if (character == "}") {
 					
 					reference = bracketPairsOpen.pop();
-					
+
 					bracketPairs[reference].done = characterNumber + 1;
 
 					bracketLevel--; 
