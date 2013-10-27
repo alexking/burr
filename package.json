@@ -1,15 +1,15 @@
 {
   "name" : "burr",
-  "version" : "0.0.4",
+  "version" : "0.0.5",
   "author" : "Alex King", 
   "description" : "Burr is a Javascript superset that embraces the prototype model while beautifying the syntax (and compiles to plain JS)",
   "repository" : {
     "type": "git",
     "url": "https://github.com/alexking/burr.git"
   },
-  "keywords" : [ "cli" ],
+  "keywords" : [ "cli", "superset", "language" ],
   "dependencies" : {
-  	"commander" : "*",
+  	"optimist" : "*",
   	"chokidar" : "*",
     "colors" : "*"
   },

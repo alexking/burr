@@ -1,3 +1,6 @@
+### version 0.0.5
+Converting CLI from [commander](https://npmjs.org/package/commander) to [optimist](https://npmjs.org/package/optimist), adding support for `burr file.br` syntax as an alias of `-f`. 
+
 ### version 0.0.4
 Converting to Burr, now located in `/src/burr/`, exports into `/src/js/`, run `js/grind.js -w burr -d js ` for development. 
 
