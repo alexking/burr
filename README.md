@@ -60,21 +60,10 @@ Note that `class` was `collection` as of `0.0.3` - while `class` isn't completel
 
 Check out the `examples/test.br` file. Keep in mind this is alpha alpha.
 
-<<<<<<< HEAD
 #### Latest Changelog `0.0.5`
 Converting CLI from [commander](https://npmjs.org/package/commander) to [optimist](https://npmjs.org/package/optimist), adding support for `burr file.br` syntax as an alias of `-f`. 
 
 Read [CHANGELOG.md](CHANGELOG.md) for more.
-=======
-#### Latest Changelog
-### version 0.0.4
-* Converting to Burr, now located in `/src/burr/`, exports into `/src/js/`, run `js/grind.js -w burr -d js ` for development. 
-* Fixing a bunch of bugs, examples in `test/string.br`. 
-* Adding Sublime Text 3 syntax and build files (`/syntax/`). 
-* Adding `-d` option to export to directory, allowing directory or file with `-w`.
-
-Read CHANGELOG.md for more.
->>>>>>> 3fae08c571d5ca785f975ad500551818344ea942
 
 #### Thanks
 Inspired by object and class pattern ideas from http://book.mixu.net/node/ch6.html.
